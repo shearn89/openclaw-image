@@ -29,6 +29,14 @@ ENV PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
 # beads
 RUN go install github.com/steveyegge/beads/cmd/bd@latest
 
-# go
+# sag
 RUN go install github.com/steipete/sag/cmd/sag@latest
+
+# Notification scripts
+COPY scripts/notify.sh /opt/notify.sh
+COPY scripts/entrypoint.sh /opt/entrypoint.sh
+RUN chmod +x /opt/notify.sh /opt/entrypoint.sh
+
+ENTRYPOINT ["/opt/entrypoint.sh"]
+CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
 
