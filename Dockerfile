@@ -2,14 +2,13 @@ FROM ghcr.io/openclaw/openclaw:latest
 
 USER root
 
-# GitHub CLI repo setup
-RUN curl -sS https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+# GitHub CLI - install from binary release
+RUN curl -sL https://github.com/cli/cli/releases/latest/download/gh_*_linux_amd64.tar.gz | tar xz -C /tmp \
+    && mv /tmp/gh_*_linux_amd64/bin/gh /usr/local/bin/gh \
+    && rm -rf /tmp/gh_*
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
-  gh \
   jq \
   ripgrep \
   libasound2-dev \
@@ -45,4 +44,3 @@ RUN chmod +x /opt/notify.sh /opt/entrypoint.sh
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
-
