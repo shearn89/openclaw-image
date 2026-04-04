@@ -26,6 +26,11 @@ RUN curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/aw
 
 RUN wget https://go.dev/dl/go1.26.1.linux-amd64.tar.gz && rm -rf /usr/local/go && tar -C /usr/local -xzf go1.26.1.linux-amd64.tar.gz
 
+# Notification scripts
+COPY scripts/notify.sh /opt/notify.sh
+COPY scripts/entrypoint.sh /opt/entrypoint.sh
+RUN chmod +x /opt/notify.sh /opt/entrypoint.sh
+
 ## Switch to user land
 USER node
 
@@ -37,11 +42,6 @@ RUN go install github.com/steveyegge/beads/cmd/bd@latest
 
 # sag
 RUN go install github.com/steipete/sag/cmd/sag@latest
-
-# Notification scripts
-COPY scripts/notify.sh /opt/notify.sh
-COPY scripts/entrypoint.sh /opt/entrypoint.sh
-RUN chmod +x /opt/notify.sh /opt/entrypoint.sh
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
