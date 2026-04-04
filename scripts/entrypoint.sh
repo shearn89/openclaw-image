@@ -7,5 +7,6 @@ trap 'echo "Shutting down..."; /opt/notify.sh "🔴 Clawd shutting down"; exit 0
 # Send startup notification
 /opt/notify.sh "🟢 Clawd is up!"
 
-# Run the original command
-exec "$@"
+# Run the original command in background so the shell stays PID 1
+"$@" &
+wait $!
