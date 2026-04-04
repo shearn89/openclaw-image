@@ -14,7 +14,7 @@ if [ -d "$AWS_SECRETS_DIR" ]; then
 fi
 
 # Trap SIGTERM and SIGINT
-trap 'echo "Shutting down..."; /opt/notify.sh "🔴 Clawd shutting down"; exit 0' SIGTERM SIGINT
+trap echo "Shutting down..."; /opt/notify.sh "🔴 Clawd shutting down"; exit 0 SIGTERM SIGINT
 
 # Send startup notification
 /opt/notify.sh "🟢 Clawd is up!"
